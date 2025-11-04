@@ -1,19 +1,15 @@
-function dataPreparation()
-    %% 1. Loading and validating data
+function [augimdsTrain, augimdsValidation, augimdsTest] = dataPreparation()
+    %% 1. Loading and validating raw data
     [labelTable, imageData, imdsTest] = loadDataset();
     
     %% 2. Data Analysis
-    % This function is used to visualize data distribution
-    analyzeDataDistribution(labelTable);
-    
-    %% 3. Data preprocessing
-    [trainData, valData, testData] = preprocessData(imageData, imdsTest);
+    analyzeDataDistribution(labelTable, imageData); % Pass imageData
 
-        % Print information
+    %% 3. Generate Base Static Masks (as an enhancement technique)
+    generateAndSaveDriverMasks(labelTable, imageData);
 
-        fprintf('Training set contains %d samples.\n', numel(trainData.Files));
+    %% 4. Preprocess Data (Splitting and Custom Read Function)
+    [augimdsTrain, augimdsValidation, augimdsTest] = preprocessData(imageData, imdsTest, labelTable);
 
-        fprintf('Validation set contains %d samples.\n', numel(valData.Files));
 
-        fprintf('Test set contains %d samples.\n', numel(testData.Files));
 end

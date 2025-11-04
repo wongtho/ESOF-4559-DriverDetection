@@ -16,11 +16,6 @@ function generateAndSaveDriverMasks(labelTable, imageDS)
         driverID = uniqueDrivers{i};
         maskFilePath = fullfile('masks', [driverID, '_mask.mat']);
 
-        % 4. Check if the mask already exists
-        if exist(maskFilePath, 'file')
-            continue;
-        end
-
         fprintf('Processing driver %s\n', driverID);
 
         % 5. Filter all images for the current driver
@@ -30,18 +25,18 @@ function generateAndSaveDriverMasks(labelTable, imageDS)
         filtedDriverDS = subset(imageDS, driverImageMask);
 
         %% 6. Creating an Analysis Figure
-        figure('Name', ['Analysis for Driver ', driverID]);
+        %figure('Name', ['Analysis for Driver ', driverID]);
 
         % Display sample image
-        subplot(2, 2, 1);
-        numSamples = min(6, numel(filtedDriverDS.Files));
-        randIndex = randperm(numel(filtedDriverDS.Files), numSamples);
-        sampleImages = cell(1, numSamples);
-        for k = 1:numSamples
-            sampleImages{k} = readimage(filtedDriverDS, randIndex(k));
-        end
-        montage(sampleImages);
-        title(['Sample Images for Driver ', driverID]);
+        %subplot(2, 2, 1);
+        %numSamples = min(6, numel(filtedDriverDS.Files));
+        %randIndex = randperm(numel(filtedDriverDS.Files), numSamples);
+        %sampleImages = cell(1, numSamples);
+        %for k = 1:numSamples
+        %    sampleImages{k} = readimage(filtedDriverDS, randIndex(k));
+        %end
+        %montage(sampleImages);
+        %title(['Sample Images for Driver ', driverID]);
 
         % 7. Calculate pixel standard deviation mask
         numImages = numel(filtedDriverDS.Files);
@@ -57,27 +52,28 @@ function generateAndSaveDriverMasks(labelTable, imageDS)
         stdMap = std(imgStack, 0, 3);
 
         % Show Standard Deviation Plot
-        subplot(2, 2, 2);
-        imshow(stdMap,[]); 
-        title('Standard Deviation Map');
-        colorbar;
+        %subplot(2, 2, 2);
+        %imshow(stdMap,[]); 
+        %title('Standard Deviation Map');
+        %colorbar;
 
         % Display a histogram of standard deviations
-        subplot(2, 2, 3);
-        histogram(stdMap);
-        title('Std. Dev. Histogram');
-        grid on;
+        %subplot(2, 2, 3);
+        %histogram(stdMap);
+        %title('Std. Dev. Histogram');
+        %grid on;
 
         % 8. Thresholding and refining the mask
         threshold = 0.1; 
         binaryMask = stdMap > threshold;
         binaryMask = imfill(binaryMask, 'holes');
         binaryMask = bwareaopen(binaryMask, 100);
+        binaryMask = imclose(binaryMask, strel('disk', 40)); % Updated parameter as per user suggestion
 
         % Show Mask
-        subplot(2, 2, 4);
-        imshow(binaryMask);
-        title('Final Binary Mask');
+        %subplot(2, 2, 4);
+        %imshow(binaryMask);
+        %title('Final Binary Mask');
 
         % 9. Save the file
         save(maskFilePath, 'binaryMask');
