@@ -3,3 +3,5 @@ Driver distraction detection and image processing
 
 Data set is collected from https://www.kaggle.com/competitions/state-farm-distracted-driver-detection/data
 Download and extract to Matlab project folder
+
+Run dataPreparation.m as the main program.
