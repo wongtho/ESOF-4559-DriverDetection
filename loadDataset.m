@@ -1,6 +1,5 @@
 function [labelTable, imageData, imdsTest] = loadDataset()
 
-
     %% 1. Loading a CSV file
     labelTable = loadClassificationTable('driver_imgs_list.csv');
 

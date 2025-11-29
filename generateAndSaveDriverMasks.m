@@ -68,7 +68,7 @@ function generateAndSaveDriverMasks(labelTable, imageDS)
         binaryMask = stdMap > threshold;
         binaryMask = imfill(binaryMask, 'holes');
         binaryMask = bwareaopen(binaryMask, 100);
-        binaryMask = imclose(binaryMask, strel('disk', 40)); % Updated parameter as per user suggestion
+        binaryMask = imclose(binaryMask, strel('disk', 50)); % Updated parameter as per user suggestion
 
         % Show Mask
         %subplot(2, 2, 4);
